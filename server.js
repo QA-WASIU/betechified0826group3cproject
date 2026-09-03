@@ -1,23 +1,22 @@
-const express = require("express");
-const dotenv = require("dotenv");
-const morgan = require("morgan");
-const connectDB = require("./src/config/db");
-const expenseRouter = require("./src/routes/expenses.routes");
+import express from "express";
+import dotenv from "dotenv";
+import mongoose from "mongoose";
+import cors from "cors";    
+import expenseRoutes from "./routes/expenseRoutes.js";
 
 dotenv.config();
+
 const app = express();
-
+app.use(cors());
 app.use(express.json());
-app.use(morgan("dev"));
-const PORT = process.env.PORT || 3800;
-//Home Page
-app.get("/", (req, res) => {
-  res.send("Welcome to Expense Tracker API");
-});
 
-app.use("/api/expense", expenseRouter);
+app.use('/api/expenses', expenseRoutes);
 
-app.listen(PORT, () => {
-  connectDB();
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
+
+// mongoose.connect(process.env.MONGO_URI)
+//   .then(() => console.log('MongoDB connected'))
+//   .catch((err) => console.error('MongoDB connection error:', err));
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
